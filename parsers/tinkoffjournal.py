@@ -4,13 +4,13 @@ import time
 import pandas as pd
 from tqdm import tqdm
 
-URL = 'https://svoedeloplus.ru/category/novosti'
+URL = 'https://journal.tinkoff.ru/flows/business-all'
 HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
                          ' AppleWebKit/537.36 (KHTML, like Gecko)'
                          ' Chrome/100.0.4896.88 Safari/537.36'}
 
-HOST = 'https://svoedeloplus.ru'
-FILE = 'svoedelo.csv'
+HOST = 'https://journal.tinkoff.ru/'
+FILE = '../tinkoffjournal.csv'
 
 
 def get_html(url, params=None):
@@ -19,13 +19,14 @@ def get_html(url, params=None):
 
 def get_content(html):
     soup = bs(html.text, 'html.parser')
-    items = soup.find('div', attrs={'class': 'post-boxes'}).find_all('div')
+    items = soup.find_all(attrs={'class': 'item--HDDKc'})
 
     news_page = pd.DataFrame([], columns=['title', 'content', 'date'])
     for item in items:
         try:
+            time.sleep(3)
             single_news_dict = {'title': None, 'content': None, 'date': None}
-            link_to_single_news = item.find('a').get('href')
+            link_to_single_news = HOST + item.find('a', attrs={'class': 'link--xmoGM'}).get('href')
 
             single_news = get_html(link_to_single_news).text
             article = bs(single_news, 'html.parser').find('article')
@@ -33,12 +34,11 @@ def get_content(html):
             title = article.find('h1').get_text()
 
             article_paragraphs = article.find_all('p')
-            article_paragraphs += article.find_all('li')
             content = ''
             for paragraph in article_paragraphs:
                 content += str(paragraph.get_text())
 
-            date = article.find('time')['datetime']
+            date = article.find('time').get_text()
 
             single_news_dict['title'] = title
             single_news_dict['content'] = content
@@ -48,6 +48,7 @@ def get_content(html):
                                   ignore_index=True)
         except Exception:
             # print('Did not work!')
+            time.sleep(2)
             continue
     return news_page
 
@@ -58,15 +59,14 @@ def parse(number_of_pages):
     failed_pages = []
     if html.status_code == 200:
         for page in tqdm(range(1, number_of_pages)):
-            print(URL + f'/page/{page}/')
             html = get_html(URL + f'/page/{page}/')
             try:
                 news_page = get_content(html)
-                print(news_page)
                 news = pd.concat([news, news_page], ignore_index=True)
             except AttributeError:
                 print(f'Parsing {page} of pages faced to Error')
                 try:
+                    time.sleep(10)
                     news_page = get_content(html)
                     news = pd.concat([news, news_page], ignore_index=True)
                 except Exception:
@@ -75,11 +75,11 @@ def parse(number_of_pages):
                     continue
         print('Parsing is completed!')
     else:
-        print('Did not get connection to svoedeloplus.ru!/n Parsing faced to error')
+        print('Did not get connection to https://journal.tinkoff.ru/!/n Parsing faced to error')
     return news, failed_pages
 
 
-parsed_news = parse(6)
+parsed_news = parse(33)
 
 print(f'Failed pages: {parsed_news[1]}')
 

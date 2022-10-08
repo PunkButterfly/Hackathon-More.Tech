@@ -10,7 +10,7 @@ HEADERS = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
                          ' Chrome/100.0.4896.88 Safari/537.36'}
 
 HOST = 'https://buh.ru'
-FILE = 'buh.csv'
+FILE = '../buh.csv'
 
 
 def get_html(url, params=None):

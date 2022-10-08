@@ -60,7 +60,6 @@ def parse(first_article, last_article):
 
 parsed_news = parse(100001, 514973)  # 514973
 
-# print(f'Failed pages: {parsed_news}')
 
 path_to_drive = ""
 parsed_news.to_csv(path_to_drive + FILE, index=False)
