@@ -24,7 +24,7 @@ def get_response(input_data, start_date, end_date):
         в формате yyyy-mm-dd
             end_date_string - строка задающая конец временного периода.
         Выход:
-            кортеж из неотформатированных результатов (инсайты, тренды, дайджест)
+            ответ в формате Json
     """
     text_pool = get_data_by_period(input_data, start_date, end_date) # выделение новостей из конкретного временного периода
 
