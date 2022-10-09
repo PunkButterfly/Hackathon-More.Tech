@@ -28,7 +28,7 @@ def preprocessing_of_channel_telegrams(parser_output, name_chanel):
         bold_entiti = ''
         news_text = out_news.message
         news_entities = out_news.entities
-        # тут поменял
+
         for entiti in news_entities:
             if type(entiti) == types.MessageEntityBold:
                 bold_entiti = entiti
@@ -36,8 +36,8 @@ def preprocessing_of_channel_telegrams(parser_output, name_chanel):
         else:
             continue
 
-        offset = bold_entiti.offset  # тут поменял
-        len = bold_entiti.length  # тут поменял
+        offset = bold_entiti.offset
+        len = bold_entiti.length
         title = news_text[:offset + len + 1]
         news_text = news_text[offset + len - 1:]
 
@@ -57,14 +57,14 @@ def preprocessing_of_channel_telegrams(parser_output, name_chanel):
         title = " ".join(title.split())
         news_text = " ".join(news_text.split())
 
-        # убрал
+
         titles.append(title)
         contents.append(news_text)
         dates.append(out_news.date)
 
-        # убрал
+
     news_dataframe = pd.DataFrame({'title': titles, 'content': contents, 'date': dates})
     news_dataframe.content = news_dataframe['content'].apply(
-        lambda x: x if len(x.split(' ')[0]) != 1 else x[2:])  # изменил
+        lambda x: x if len(x.split(' ')[0]) != 1 else x[2:])
 
     return news_dataframe
