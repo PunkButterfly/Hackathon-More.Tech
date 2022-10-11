@@ -2,7 +2,6 @@
 
 ## Результаты проделанной работы
 
-- [Видеодемонстрация](https://drive.google.com/file/d/1VnMtRBx2lo_jdpSgUQE1BVUlesRqhrK5/view?usp=sharing)
 - [Презентация](https://drive.google.com/file/d/1GnpSwvSbfGClLCCIcpZbu28kYOhJ79s1/view?usp=sharing)
 
 ## Модель для формирования ответа
